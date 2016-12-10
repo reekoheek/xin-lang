@@ -66,8 +66,22 @@ class Lang extends xin.Component {
     }
 
     let langUrl = new window.URL(this.base + '/' + lang + '.json', window.location.href).href;
-    let response = await window.fetch(langUrl);
+
+    let response = await new Promise(async (resolve, reject) => {
+      let xhr = new window.XMLHttpRequest();
+      xhr.onload = () => {
+        resolve(new window.Response(xhr.responseText, {status: xhr.status}));
+      };
+      xhr.onerror = () => {
+        reject(new TypeError('Local request failed'));
+      };
+      xhr.open('GET', langUrl);
+      xhr.send(null);
+    });
+
+    // let response = await window.fetch(langUrl);
     let resource = this.resources[lang] = await response.json();
+
     return resource;
   }
 
