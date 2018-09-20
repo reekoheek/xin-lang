@@ -22,7 +22,7 @@ export class Lang {
       return message;
     }
 
-    return messages[message];
+    return messages[message] || message;
   }
 
   interpolate (message, ...args) {
